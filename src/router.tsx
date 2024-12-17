@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import HomePage from './pages/home/home-page';
 import AppProviders from './providers';
 import ProfilePage from './pages/profile/profile-page';
+import PunchPage from './pages/punch-page/punch-page';
 
 
 const router = createBrowserRouter([
@@ -12,6 +13,7 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <HomePage /> },
       { path: "/profile", element: <ProfilePage /> },
+      { path: "/punch-page", element:<PunchPage/>}
 
     ],
   },
