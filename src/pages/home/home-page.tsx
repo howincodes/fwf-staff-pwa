@@ -13,12 +13,15 @@ import {
 } from "lucide-react";
 import Logo from "@/assets/logo.svg";
 import AttandanceCard from "./components/attandance-card";
+import { requestCameraPermission } from "@/utils/camera-permission-utils";
+import { openCamera } from "@/utils/view-camera.utils";
 const HomePage = () => {
   const [isPunchedIn, setIsPunchedIn] = useState(false);
 
   const handlePunchIn = () => {
-    setIsPunchedIn(true);
-  };
+    openCamera();
+    setIsPunchedIn(true); 
+  };;
 
   const handlePunchOut = () => {
     setIsPunchedIn(false);
@@ -98,7 +101,13 @@ const HomePage = () => {
         {!isPunchedIn ? (
           <div
             className=" flex justify-center items-center gap-2 px-4 w-full py-3 dark:bg-zinc-900 p-3 rounded-2xl border border-input cursor-pointer"
-            onClick={handlePunchIn}
+            onClick={() => 
+            {
+            handlePunchIn();
+
+            }
+            }
+
           >
             <Coffee className="w-5 h-5" />
             <h1 className="text-lg">Punch In</h1>
@@ -106,7 +115,9 @@ const HomePage = () => {
         ) : (
           <div
             className=" flex justify-center items-center gap-2 bg-[#FED272] px-4 w-full py-3 rounded-2xl cursor-pointer"
-            onClick={handlePunchOut}
+            onClick={
+              
+              handlePunchOut}
           >
             <LogOut className="w-5 h-5 text-black" />
             <h1 className="text-lg text-black">Punch Out</h1>
