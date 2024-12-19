@@ -13,12 +13,14 @@ import {
 } from "lucide-react";
 import Logo from "@/assets/logo.svg";
 import AttandanceCard from "./components/attandance-card";
+import { openCamera } from "@/utils/view-camera.utils";
 const HomePage = () => {
   const [isPunchedIn, setIsPunchedIn] = useState(false);
 
   const handlePunchIn = () => {
+    openCamera();
     setIsPunchedIn(true);
-  };
+  };;
 
   const handlePunchOut = () => {
     setIsPunchedIn(false);
@@ -87,18 +89,23 @@ const HomePage = () => {
       </div>
 
       <div className="space-y-6 py-6 px-3 dark:bg-zinc-800 bg-white h-screen">
-      <AttandanceCard/>
-      <AttandanceCard/>
-      <AttandanceCard/>
-      <AttandanceCard/>
-    
+        <AttandanceCard />
+        <AttandanceCard />
+        <AttandanceCard />
+        <AttandanceCard />
+
       </div>
 
       <div className="fixed bottom-0 flex w-full gap-4 p-4">
         {!isPunchedIn ? (
           <div
             className=" flex justify-center items-center gap-2 px-4 w-full py-3 dark:bg-zinc-900 p-3 rounded-2xl border border-input cursor-pointer"
-            onClick={handlePunchIn}
+            onClick={() => {
+              handlePunchIn();
+
+            }
+            }
+
           >
             <Coffee className="w-5 h-5" />
             <h1 className="text-lg">Punch In</h1>
@@ -106,7 +113,9 @@ const HomePage = () => {
         ) : (
           <div
             className=" flex justify-center items-center gap-2 bg-[#FED272] px-4 w-full py-3 rounded-2xl cursor-pointer"
-            onClick={handlePunchOut}
+            onClick={
+
+              handlePunchOut}
           >
             <LogOut className="w-5 h-5 text-black" />
             <h1 className="text-lg text-black">Punch Out</h1>
