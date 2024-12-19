@@ -1,0 +1,3 @@
+const attendanceReducers = {};
+
+export { attendanceReducers };
