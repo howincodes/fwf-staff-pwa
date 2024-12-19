@@ -1,0 +1,46 @@
+import axios from "axios";
+export const isLocal = import.meta.env.VITE_IS_LOCAL == "true" ? true : false;
+
+export const WEBSITE_API_URL = isLocal ? 'http://fwf_fasna.test/api' : 'https://fitwithfazna.howincloud.com/api'
+export const ONDC_BASE_URL = "https://ondc.eatiko.com/api";
+export const MEDIA_URL = isLocal
+  ? "https://eatkoimages.b-cdn.net"
+  : "https://eatkoimages.b-cdn.net";
+
+const apiClient = axios.create({
+  baseURL: WEBSITE_API_URL,
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
+});
+
+apiClient.interceptors.request.use(
+  async (config) => {
+    try {
+      const { store } = await import("@/store");
+      const state = store.getState();
+      const token = state.auth?.user?.auth_token;
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+apiClient.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+export default apiClient;
