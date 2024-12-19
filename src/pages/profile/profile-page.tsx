@@ -9,12 +9,14 @@ import {
 } from "lucide-react";
 import user from "../../assets/user.png";
 import ProfileTiles from "./components/profile-tile";
+import ModeToggle from "@/components/mode-toggle";
 
 const ProfilePage = () => {
   return (
     <div>
       <div className="bg-gradient-to-l from-yellow-500 to-yellow-200 h-32 relative"></div>
-      <div className="rounded-2xl px-3 py-1 bg-zinc-200 absolute top-20 right-6 md:right-8 lg:right-12 text-sm sm:text-base">
+      <ModeToggle/>
+      <div className="rounded-2xl px-3 py-1 bg-zinc-100 dark:bg-zinc-900 absolute top-20 right-6 md:right-8 lg:right-12 text-sm sm:text-base">
         #ID: HDCV100
       </div>
       <div className="flex items-center justify-end  gap-5">

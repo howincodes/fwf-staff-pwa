@@ -12,7 +12,7 @@ export const authApi = baseApi.enhanceEndpoints({
             query: (data) => ({
                 url: "/send-otp",
                 method: "POST",
-                data
+                body: data
             }),
 
         }),
@@ -21,7 +21,7 @@ export const authApi = baseApi.enhanceEndpoints({
             query: (data) => ({
                 url: "/verify-otp",
                 method: "POST",
-                data
+                body: data
             }),
 
            
