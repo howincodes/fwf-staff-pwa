@@ -1,6 +1,6 @@
 
 import { baseApi } from "@/config/base-api"
-import { getWorkUpdatesResponse } from "@/types/attendance/attendace-types"
+import {  WorkUpdate } from "@/types/attendance/attendace-types"
 
 
 
@@ -8,10 +8,13 @@ export const attendanceApi = baseApi.enhanceEndpoints({
     addTagTypes: ["attendance"],
 }).injectEndpoints({
     endpoints: (builder) => ({
-           getWorkUpdates: builder.query<getWorkUpdatesResponse, void>({
-            query: () => ({
+           getWorkUpdates: builder.query<WorkUpdate[], void>({
+            query: (token) => ({
                 url: "/get-work-updates",
                 method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
             }),
 
            
