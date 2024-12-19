@@ -24,7 +24,7 @@ import { useEffect, useState } from "react";
 // } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import ModeToggle from "@/components/mode-toggle";
-import { useSendOtpMutation } from "@/store/auth/authApi";
+import { useSendOtpMutation } from "@/store/api/authApi";
 // import { errorToast } from "@/utils/common-utils";
 // import { isRtl } from "@/utils/common-utils";
 
@@ -39,9 +39,25 @@ const LoginView = () => {
     const [sendOtp] = useSendOtpMutation();
   const navigate = useNavigate();
 
-  const handleSendOtp = async () => {
-await sendOtp(phoneNumber)
-  }
+
+
+
+
+  const handleSendOtp = async (e: React.FormEvent) => {
+   e.preventDefault();
+  
+    try {
+      const response = await sendOtp({
+        phone: phoneNumber, // Ensure phoneNumber is a valid value
+      }).unwrap();
+      console.log("OTP Sent Successfully:", response);
+    } catch (error) {
+      console.error("Error Sending OTP:", error);
+    }
+  };
+  
+
+
 
   return (
     <div className=" flex flex-col p-4 max-h-screen">
