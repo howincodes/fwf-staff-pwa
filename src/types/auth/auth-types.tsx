@@ -8,13 +8,15 @@ export interface LoginRes{
     messgae: string;
 }
 
-export interface OtpReq{
-    phone:number
+export interface OtpReq {
+    phone: string;
+    otp: string;
 }
+
 
 export interface OTPResp {
     message: string;
-    user:    UserType;
+    user?:    UserType;
 }
 
 export interface RegResp {

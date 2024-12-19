@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 // import { useTranslation } from "react-i18next";
 // import {triggerNotificationHaptic,triggerSelectionHaptic} from "@/utils/haptic-utils";
 // import {clearPersonalInfo,setPIName,} from "@/store/slices/auth/personalInfoSlice";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 // import { toast } from "@/components/ui/use-toast";
 // import { useGetLanguagesQuery } from "@/store/slices/languages/languagesApi";
 // import i18n from "@/i18n";
@@ -29,31 +29,29 @@ import { useSendOtpMutation } from "@/store/api/authApi";
 // import { isRtl } from "@/utils/common-utils";
 
 const LoginView = () => {
-//   const [value, setvalue] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-
-
-  useEffect(() => {
-
-  }, []);
+  const [ phoneNumber, setPhoneNumber] = useState("");
     const [sendOtp] = useSendOtpMutation();
   const navigate = useNavigate();
 
 
 
-
-
   const handleSendOtp = async (e: React.FormEvent) => {
-   e.preventDefault();
+    e.preventDefault();
+    
+    if (!phoneNumber) {
+      console.error("Phone number is required.");
+      return;
+    }
   
     try {
       const response = await sendOtp({
-        phone: phoneNumber, // Ensure phoneNumber is a valid value
+        phone: phoneNumber,
       }).unwrap();
       console.log("OTP Sent Successfully:", response);
     } catch (error) {
       console.error("Error Sending OTP:", error);
     }
+    navigate("/otp", { state: { phone: phoneNumber } });
   };
   
 

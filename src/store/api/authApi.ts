@@ -12,20 +12,18 @@ export const authApi = baseApi.enhanceEndpoints({
             query: (data) => ({
                 url: "/send-otp",
                 method: "POST",
-                body: data
+                data
             }),
 
         }),
-
         verifyOtp: builder.mutation<OTPResp, OtpReq>({
             query: (data) => ({
                 url: "/verify-otp",
                 method: "POST",
-                body: data
+               data
             }),
-
-           
         }),
+        
 
         register: builder.mutation<RegResp,RegReq>({
             query: (data) => ({
