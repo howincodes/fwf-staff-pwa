@@ -1,16 +1,31 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import React from "react";
+import { useRegisterMutation } from "@/store/api/authApi";
+import { errorToast, successToast } from "@/utils/common-utils";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 
 export const SignUpView = () => {
 const navigate=useNavigate()
-const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    {console.log("hello")}
-    navigate("/")
-}
+const [registerUser] =useRegisterMutation();
+const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneNumber, ] = useState("");
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  try {
+    await registerUser({
+      name,
+      email,
+      phone: phoneNumber,
+    }).unwrap();
+    // successToast("Registered Successfully");
+    navigate("/");
+  } catch {
+    // errorToast("Registration Failed", );
+  }
+};
   return (
     <div className="flex  justify-center">
       <div className="text-center p-5">
@@ -19,9 +34,10 @@ const handleSubmit = (e: React.FormEvent) => {
         <form id="StaffInfo" onSubmit={handleSubmit}>
           <Input
             type="text"
+
             placeholder={("Enter your name")}
             className="bg-input text-input-foreground text-md  rounded-xl p-8 mt-8 w-full"
-
+            onChange={(e) => setName(e.target.value)}
           />
         
 
@@ -30,11 +46,12 @@ const handleSubmit = (e: React.FormEvent) => {
                 type="email"
                 placeholder="Enter your email"
                 className="bg-input text-input-foreground text-md  rounded-xl p-8 mt-4 w-full"
+                onChange={(e) => setEmail(e.target.value)}
               />
             </>
           
         </form>
-        <Button className="mt-10 w-full px-6 py-5" type="submit" onClick={()=>navigate("/")}>
+        <Button className="mt-10 w-full px-6 py-6 font-bold text-md" type="submit" form="StaffInfo">
                 SignUp
         </Button>
       </div>
