@@ -20,10 +20,10 @@ apiClient.interceptors.request.use(
     try {
       const { store } = await import("@/store");
       const state = store.getState();
-      const token = state.auth?.user?.auth_token;
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
+      // const token = state.auth?.user?.auth_token;
+      // if (token) {
+      //   config.headers.Authorization = `Bearer ${token}`;
+      // }
     } catch (error) {
       console.log(error);
     }

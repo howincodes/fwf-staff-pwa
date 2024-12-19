@@ -1,7 +1,7 @@
 import { UserType } from "../common/common";
 
 export interface LoginReq{
-    phone:number
+    phone:string
 }
 
 export interface LoginRes{
