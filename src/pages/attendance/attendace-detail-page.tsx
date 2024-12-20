@@ -9,8 +9,6 @@ const AttendanceDetailPage = () => {
         year: 'numeric',
     }).format(new Date());
 
-    const {data}=useGetWorkUpdatesQuery()
-
     const navigate=useNavigate()
     return (
         <div className='min-h-screen flex flex-col  bg-zinc-100 dark:bg-zinc-900 gap-4 w-screen overflow-x-hidden overflow-y-scroll'>
