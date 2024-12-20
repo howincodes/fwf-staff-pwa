@@ -28,7 +28,7 @@ export interface Users {
     phone:                   string;
     unique_id:               string;
     name:                    string;
-    email:                   string;
+    email:                   string | null;
     updated_at:              Date;
     created_at:              Date;
     id:                      number;
@@ -37,7 +37,7 @@ export interface Users {
     feeding_mom_months:      null;
     show_live_joining_alert: boolean;
     token:                   string;
-    staff_profile:           StaffProfile;
+    staff_profile:           StaffProfile |null;
 }
 
 export interface StaffProfile {
@@ -50,8 +50,16 @@ export interface StaffProfile {
 }
 
 export interface RegReq {
-    phone: number;
+    phone: string;
     name:  string;
     email: string;
 }
 
+export interface AuthSliceState {
+    user?: Users;
+    isLoading: boolean;
+    isError: boolean;
+    errorMessage: string;
+    currentPhone: string;
+  }
+  

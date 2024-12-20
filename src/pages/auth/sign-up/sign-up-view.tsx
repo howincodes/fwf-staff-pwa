@@ -1,9 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRegisterMutation } from "@/store/api/authApi";
-import { errorToast, successToast } from "@/utils/common-utils";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 
 export const SignUpView = () => {
@@ -11,7 +10,8 @@ const navigate=useNavigate()
 const [registerUser] =useRegisterMutation();
 const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [phoneNumber, ] = useState("");
+  const location =useLocation();
+  const phoneNumber = location.state.phone;
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   try {

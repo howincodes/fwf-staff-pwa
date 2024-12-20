@@ -1,3 +1,0 @@
-const attendanceReducers = {};
-
-export { attendanceReducers };

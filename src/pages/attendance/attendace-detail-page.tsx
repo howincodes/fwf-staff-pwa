@@ -1,5 +1,6 @@
-import { useGetWorkUpdatesQuery } from '@/store/attendance/api/attendanceApi';
-import { ChevronLeft, CircleUserRound } from 'lucide-react'
+import { useGetWorkUpdatesQuery } from '@/store/api/attendanceApi';
+import { ChevronLeft, CircleUserRound, Plus } from 'lucide-react'
+import { useNavigate } from 'react-router-dom';
 const AttendanceDetailPage = () => {
     const { data: workUpdatesData } = useGetWorkUpdatesQuery()
     const formattedDate = new Intl.DateTimeFormat('en-US', {
@@ -7,12 +8,18 @@ const AttendanceDetailPage = () => {
         day: '2-digit',
         year: 'numeric',
     }).format(new Date());
+
+    const {data}=useGetWorkUpdatesQuery()
+
+    const navigate=useNavigate()
     return (
         <div className='min-h-screen flex flex-col  bg-zinc-100 dark:bg-zinc-900 gap-4 w-screen overflow-x-hidden overflow-y-scroll'>
             <div className='flex w-full justify-center px-4 pt-6 pb-1'>
-                <ChevronLeft />
+                <ChevronLeft onClick={() => navigate(-1)}/>
                 <h1 className='mx-auto'>Attendance Details</h1>
+                <div className='flex justify-end'><Plus/></div>
             </div>
+
             <div className='flex justify-between w-full bg-white dark:bg-zinc-800 px-4 text-md py-6'>
                 <h1 className='font-medium'>Faris Basha TM</h1>
                 <h2 className='text-zinc-500'>{formattedDate}</h2>

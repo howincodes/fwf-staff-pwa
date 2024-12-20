@@ -3,10 +3,14 @@ import img from "@/assets/img.webp";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useHowinMaps } from "@/modules/howin-maps";
 
 const PunchPage = () => {
   const [refetch, setRefetch] = useState(false);
+  const { map, getPlacePredictions, geocodeLatLng, geocodePlaceId } = useHowinMaps();
   const navigate = useNavigate();
+
+  // const handleGeo
   return (
     <div>
       <div className="p-3 shadow-sm">
@@ -33,6 +37,9 @@ const PunchPage = () => {
             }}
           />
         </div>
+        <Button>
+
+        </Button>
 
         <div className="fixed bottom-4 w-full px-6 left-0 right-0 flex justify-center">
           <Button className="bg-yellow-500 w-full py-3 rounded-lg">
