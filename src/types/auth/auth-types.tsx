@@ -25,7 +25,7 @@ export interface RegResp {
 }
 
 export interface RegReq {
-    phone: number;
+    phone: string;
     name:  string;
     email: string;
 }

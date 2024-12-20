@@ -33,7 +33,7 @@ export const attendanceApi = baseApi.enhanceEndpoints({
 
         // }),
     })
-})
+
 export const {
     useGetWorkUpdatesQuery
 } = attendanceApi
