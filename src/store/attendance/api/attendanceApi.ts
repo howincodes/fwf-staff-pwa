@@ -13,8 +13,9 @@ export const attendanceApi = baseApi.enhanceEndpoints({
                 url: "/get-work-updates",
                 method: "POST",
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`, 
                 }
+           }),
             }),
 
            
