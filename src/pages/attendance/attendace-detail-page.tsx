@@ -2,6 +2,7 @@ import { useGetWorkUpdatesQuery } from '@/store/api/attendanceApi';
 import { ChevronLeft, CircleUserRound, Plus } from 'lucide-react'
 import { useNavigate } from 'react-router-dom';
 const AttendanceDetailPage = () => {
+     
     const { data: workUpdatesData } = useGetWorkUpdatesQuery()
     const formattedDate = new Intl.DateTimeFormat('en-US', {
         month: 'short',
