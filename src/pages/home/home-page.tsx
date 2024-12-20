@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import ModeToggle from "@/components/mode-toggle";
 import { Card } from "@/components/ui/card";
 import {
@@ -13,19 +13,28 @@ import {
 } from "lucide-react";
 import Logo from "@/assets/logo.svg";
 import AttandanceCard from "./components/attandance-card";
-import { openCamera } from "@/utils/view-camera.utils";
+import { useNavigate } from "react-router-dom";
+// import { openCamera } from "@/utils/view-camera.utils";
 const HomePage = () => {
   const [isPunchedIn, setIsPunchedIn] = useState(false);
-
+  const navigate=useNavigate()
+const fileInputRef = useRef<HTMLInputElement | null>(null);
   const handlePunchIn = () => {
-    openCamera();
     setIsPunchedIn(true);
+    fileInputRef.current?.click();
   };;
 
   const handlePunchOut = () => {
     setIsPunchedIn(false);
+    fileInputRef.current?.click();
   };
 
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    navigate("/punch-page", { state: { attendanceImg: file } });
+    console.log(file); 
+  };
+  
   return (
     <div className="relative min-h-screen bg-zinc-100 dark:bg-zinc-900">
       <ModeToggle />
@@ -96,32 +105,36 @@ const HomePage = () => {
 
       </div>
 
+    <div>
+      <input
+        ref={fileInputRef} // Link to the ref
+        type="file"
+        accept="image/*"  // Allow only image capture from the camera
+        capture="user"  // Forcing the camera to be used
+        onChange={handleFileChange}
+        style={{ display: 'none' }}  // Hide the input element
+      />
+
       <div className="fixed bottom-0 flex w-full gap-4 p-4">
         {!isPunchedIn ? (
           <div
-            className=" flex justify-center items-center gap-2 px-4 w-full py-3 dark:bg-zinc-900 p-3 rounded-2xl border border-input cursor-pointer"
-            onClick={() => {
-              handlePunchIn();
-
-            }
-            }
-
+            className="flex justify-center items-center gap-2 px-4 w-full py-3 dark:bg-zinc-900 p-3 rounded-2xl border border-input cursor-pointer"
+            onClick={handlePunchIn}
           >
             <Coffee className="w-5 h-5" />
             <h1 className="text-lg">Punch In</h1>
           </div>
         ) : (
           <div
-            className=" flex justify-center items-center gap-2 bg-[#FED272] px-4 w-full py-3 rounded-2xl cursor-pointer"
-            onClick={
-
-              handlePunchOut}
+            className="flex justify-center items-center gap-2 bg-[#FED272] px-4 w-full py-3 rounded-2xl cursor-pointer"
+            onClick={handlePunchOut}
           >
             <LogOut className="w-5 h-5 text-black" />
             <h1 className="text-lg text-black">Punch Out</h1>
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 };
