@@ -7,7 +7,7 @@ import PunchPage from './pages/punch-page/punch-page';
 import LoginView from './pages/auth/login-view/login-page';
 import OTPView from './pages/auth/otp-view/otp-view';
 import { SignUpView } from './pages/auth/sign-up/sign-up-view';
-import AttendanceDetailPage from './pages/attendance/attendace-detail-page';
+import WorkUpdates from './pages/workupdates/work-updates';
 
 
 
@@ -22,7 +22,7 @@ const router = createBrowserRouter([
       {path:"/signUp",element: <SignUpView/>},
       { path: "/profile", element: <ProfilePage /> },
       { path: "/punch-page", element: <PunchPage /> },
-      { path: "/attendance-details", element: <AttendanceDetailPage /> }
+      { path: "/work-update", element: <WorkUpdates /> }
 
     ],
   },

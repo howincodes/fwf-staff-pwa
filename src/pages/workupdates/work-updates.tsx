@@ -1,7 +1,7 @@
 import { useGetWorkUpdatesQuery } from '@/store/api/attendanceApi';
 import { ChevronLeft, CircleUserRound, Plus } from 'lucide-react'
 import { useNavigate } from 'react-router-dom';
-const AttendanceDetailPage = () => {
+const WorkUpdates = () => {
      
     const { data: workUpdatesData } = useGetWorkUpdatesQuery()
     const formattedDate = new Intl.DateTimeFormat('en-US', {
@@ -15,7 +15,7 @@ const AttendanceDetailPage = () => {
         <div className='min-h-screen flex flex-col  bg-zinc-100 dark:bg-zinc-900 gap-4 w-screen overflow-x-hidden overflow-y-scroll'>
             <div className='flex w-full justify-center px-4 pt-6 pb-1'>
                 <ChevronLeft onClick={() => navigate(-1)}/>
-                <h1 className='mx-auto'>Attendance Details</h1>
+                <h1 className='mx-auto'>WorkUpdates</h1>
                 <div className='flex justify-end'><Plus/></div>
             </div>
 
@@ -54,5 +54,5 @@ const AttendanceDetailPage = () => {
     )
 }
 
-export default AttendanceDetailPage
+export default WorkUpdates
 
