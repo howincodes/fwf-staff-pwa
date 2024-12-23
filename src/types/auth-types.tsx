@@ -1,4 +1,5 @@
-import { User } from "../common/common";
+import { User } from "./common";
+
 
 export interface LoginReq{
     phone:string
@@ -16,7 +17,7 @@ export interface OtpReq {
 
 export interface OTPResp {
     message: string;
-    user?:    User;
+    user?:    User
 }
 
 export interface RegResp {

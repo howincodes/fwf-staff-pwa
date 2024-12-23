@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useHowinMaps } from "@/modules/howin-maps";
 import AddressLoading from "./components/addrees-loading";
 import { requestLocationPermission } from "@/utils/location-permission-utils";
+import { usePunchInMutation } from "@/store/api/staffAttendanceApi";
 
 type Position = { lat: number; lng: number } | null;
 
@@ -19,14 +20,14 @@ const PunchPage = () => {
 
   const navigate = useNavigate();
 
+  const [punchInData]=usePunchInMutation();
+
 useEffect(() => {
   const handleCurrentLocation = () => {
     requestLocationPermission();
     if (navigator.geolocation) {  
-      alert("Geolocation is supported by your browser");
       setIsLocLoading(true);
       navigator.geolocation.getCurrentPosition((position) => {
-        alert("Latitude: " + position.coords.latitude + "Longitude: " + position.coords.longitude);
         const { latitude, longitude } = position.coords;
         setPosition({ lat: latitude, lng: longitude });
         setIsLocLoading(false);
@@ -61,9 +62,24 @@ const handleGeo = () => {
 useEffect(() => {
   handleGeo();
 }, [position]);
-const handleSubmit = () => {
-  navigate("/");
-}
+
+
+
+  const handleSubmit = async () => {
+    try {
+      await punchInData({
+        image: attendanceImg,
+        latitude: position?.lat.toString(),
+        longitude: position?.lng.toString(),
+        address: formattedAddress,
+      });
+      navigate("/");
+    } catch (error) {
+      console.error("Error punching in:", error);
+
+    }
+  };
+
   return (
     <div>
       <div className="p-3 shadow-sm">
@@ -84,7 +100,7 @@ const handleSubmit = () => {
       </div>
       <div className="rounded-t-lg dark:bg-black  p-5 max-h-[60vh] overflow-y-auto">
         <h1 className="dark:text-white text-black "> Punched out</h1>
-        <h2 className="text-gray-500 text-sm"> 16 Dec, Mon | 10:00 AM</h2>
+        <h2 className="text-gray-500 text-sm">{new Intl.DateTimeFormat('en-US', { day: '2-digit', month: 'short', weekday: 'short', hour: 'numeric', minute: '2-digit' }).format(new Date())}</h2>
         <div className="flex mt-1 items-center justify-between gap-2 text-sm bg-zinc-800 px-2 py-2 rounded-sm w-full">
           <MapPinned className="h-4 w-4 dark:text-white text-black " />
          { isLocLoading? <div className="flex justify-center items-center"><AddressLoading/></div> : <h1 className={`w-[70vw] truncate text-white `}>
