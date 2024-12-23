@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useHowinMaps } from "@/modules/howin-maps";
 import AddressLoading from "./components/addrees-loading";
+import { requestLocationPermission } from "@/utils/location-permission-utils";
 
 type Position = { lat: number; lng: number } | null;
 
@@ -20,14 +21,14 @@ const PunchPage = () => {
 
 useEffect(() => {
   const handleCurrentLocation = () => {
-
+    requestLocationPermission();
     if (navigator.geolocation) {  
+      alert("Geolocation is supported by your browser");
       setIsLocLoading(true);
       navigator.geolocation.getCurrentPosition((position) => {
+        alert("Latitude: " + position.coords.latitude + "Longitude: " + position.coords.longitude);
         const { latitude, longitude } = position.coords;
         setPosition({ lat: latitude, lng: longitude });
-        console.log("Latitude:", latitude);
-        console.log("Longitude:", longitude);
         setIsLocLoading(false);
       });
     }

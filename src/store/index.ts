@@ -67,10 +67,11 @@ import { combineReducers } from "redux";
 
 import { configureStore } from "@reduxjs/toolkit";
 import authSlice  from "./slice/authSlice";
-
+import locationSlice  from "./slice/locationSlice";
 const rootReducer = combineReducers({
   [baseApi.reducerPath]: baseApi.reducer,
   auth: authSlice, // Your auth slice
+  location:locationSlice
 });
 
 const persistConfig = {
@@ -91,5 +92,9 @@ export const store = configureStore({
 });
 
 export const persistor = persistStore(store);
+export type RootState = ReturnType<typeof store.getState>;
+
+export type AppDispatch = typeof store.dispatch;
+
 
 
