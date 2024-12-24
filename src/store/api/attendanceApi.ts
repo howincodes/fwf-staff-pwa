@@ -1,6 +1,7 @@
 
 import { baseApi } from "@/config/base-api";
-import { WorkUpdate } from "@/types/attendance/attendace-types";
+import { WorkUpdate } from "@/types/attendace-types";
+
 
 
 export const attendanceApi = baseApi.enhanceEndpoints({
