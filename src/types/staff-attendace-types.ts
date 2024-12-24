@@ -9,7 +9,7 @@ export interface PunchOutResp {
 }
 
 export interface AttendanceReq{
-    image:      string;
+    image:    File;
     latitude?:   string;
     longitude?:  string;
     address:    string;
@@ -27,4 +27,23 @@ export interface Attendance {
     updated_at: Date;
     created_at: Date;
     id:         number;
+    date:      Date;
 }
+
+
+export interface DayByDayAttendance {
+    attendance: AllAttendance[];
+}
+
+export interface AllAttendance {
+  
+    punch_in:  Punch;
+    punch_out: Punch;
+}
+
+export interface Punch {
+    created_at: Date;
+    address:    string;
+}
+
+

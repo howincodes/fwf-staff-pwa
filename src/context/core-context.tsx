@@ -31,6 +31,7 @@ export const CoreProvider: React.FC<CoreProviderProps> = ({ children }) => {
         latitude: locationState.latitude,
         longitude: locationState.longitude
     }
+    
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {

@@ -1,28 +1,28 @@
 // File: utils/common-utils.js
-import { toast } from '@/components/ui/use-toast';
+
+import { toast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import moment from 'moment';
 
 
-const successToast = (message:string) => {
-    toast({
-        title: "Success",
-        description: message,
-        status: "success",
-        duration: 2000,
+const successToast = (message: string, duration?: number): void => {
 
-    });
-};
-
-const errorToast = (message:string) => {
     toast({
-        title: "Error",
-        description: message,
-        status: "error",
-        duration: 2000,
-        variant: "destructive"
+      // title: "Success",
+      description: message,
+      duration: duration ? duration : 2000,
     });
-};
+  };
+  
+  const errorToast = (message: string, duration?: number): void => {
+
+    toast({
+      // title: "Error",
+      description: message,
+      duration: duration ? duration : 2000,
+      variant: "destructive",
+    });
+  };
 const truncateText = (text:string, length:number) => {
     if (!text || text?.length === 0) {
         return "";

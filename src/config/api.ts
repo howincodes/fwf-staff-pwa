@@ -3,7 +3,8 @@ import axios from "axios";
 const isLocal = true
 
 
-export const WEBSITE_API_URL = isLocal ? 'http://192.168.31.176:8000/api/staff' : 'https://fitwithfazna.howincloud.com/api/staff'
+export const WEBSITE_API_URL = isLocal ? 'http://fwf_fasna.test/api/staff' : 'https://fitwithfazna.howincloud.com/api/staff'
+
 export const ONDC_BASE_URL = "https://ondc.eatiko.com/api";
 
 export const MEDIA_URL = isLocal

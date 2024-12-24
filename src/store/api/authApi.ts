@@ -1,6 +1,6 @@
 
 import { baseApi } from "@/config/base-api"
-import { LoginReq, LoginRes, OtpReq, OTPResp, RegReq, RegResp } from "@/types/auth-types"
+import { GetUserDataResp, LoginReq, LoginRes, OtpReq, OTPResp, RegReq, RegResp } from "@/types/auth-types"
 
 
 
@@ -33,12 +33,17 @@ export const authApi = baseApi.enhanceEndpoints({
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
-                data: data
+             data
             }),
+            invalidatesTags: ["auth"],
 
         }),
 
+
+        getUserData: builder.query<GetUserDataResp, void>({
+
         getUserData: builder.query({
+
             query: () => ({
                 url: "/user",
                 method: "GET",
@@ -72,9 +77,13 @@ export const authApi = baseApi.enhanceEndpoints({
 })
 export const {
     useRegisterMutation,
-    useGetUserDataQuery,
+
+    useLazyGetUserDataQuery,
+    // useGetUserDataQuery,
+
     useSendOtpMutation,
     useVerifyOtpMutation,
     // useDeleteAccountDataMutation,
     // useEditUserDataMutation
+
 } = authApi

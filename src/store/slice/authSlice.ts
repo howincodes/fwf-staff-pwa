@@ -1,6 +1,7 @@
-import { AuthSliceState } from "@/types/auth/auth-types";
+
 import { createSlice } from "@reduxjs/toolkit";
 import { authApi } from "../api/authApi";
+import { AuthSliceState } from "@/types/auth-types";
 
 
 export const authInitialState: AuthSliceState = {
@@ -18,7 +19,7 @@ export const authInitialState: AuthSliceState = {
     logout: (state) => {
       state.user = undefined;
       localStorage.removeItem("user");
-      localStorage.removeItem("recentSearches");
+      // localStorage.removeItem("recentSearches");
     },
     loadUser: (state) => {
       state.user = localStorage.getItem("user")
@@ -57,6 +58,15 @@ export const authInitialState: AuthSliceState = {
         .addMatcher(
             authApi.endpoints.register.matchFulfilled,
             (state, { payload }) => {
+                if (payload?.user) {
+                    state.user = payload.user
+                    localStorage.setItem("user", JSON.stringify(payload?.user))
+                }
+            }
+        )
+        .addMatcher(
+            authApi.endpoints.getUserData.matchFulfilled,
+            (state, { payload }) => {
 
                 if (payload?.user) {
                     state.user = payload.user
@@ -64,16 +74,6 @@ export const authInitialState: AuthSliceState = {
                 }
             }
         )
-        // .addMatcher(
-        //     authApi.endpoints.getUserData.matchFulfilled,
-        //     (state, { payload }) => {
-
-        //         if (payload?.user) {
-        //             state.user = payload.user
-        //             localStorage.setItem("user", JSON.stringify(payload?.user))
-        //         }
-        //     }
-        // )
 
 },
 });
