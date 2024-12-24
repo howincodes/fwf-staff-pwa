@@ -30,13 +30,12 @@ export interface Attendance {
     date:      Date;
 }
 
-
 export interface DayByDayAttendance {
     attendance: AllAttendance[];
 }
 
 export interface AllAttendance {
-  
+    date:      Date;
     punch_in:  Punch;
     punch_out: Punch;
 }
@@ -45,5 +44,4 @@ export interface Punch {
     created_at: Date;
     address:    string;
 }
-
 

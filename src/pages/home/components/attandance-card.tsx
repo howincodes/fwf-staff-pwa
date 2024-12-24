@@ -1,11 +1,12 @@
+import { AllAttendance } from '@/types/staff-attendace-types'
 import { ChevronRight } from 'lucide-react'
 
 
-const AttandanceCard = () => {
+const AttandanceCard = ({attandance}:{attandance:AllAttendance}) => {
   return (
     <div className="flex-col ">
     <div className="flex items-center gap-2 justify-between mb-4 ">
-       <div className=" ">16 Dec | Mon</div>
+       <div className=" ">{attandance?.date.toString()}</div>
 
        <div className="flex items-center gap-2 ">
          <div className="flex flex-col">

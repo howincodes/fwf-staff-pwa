@@ -42,7 +42,6 @@ export const authApi = baseApi.enhanceEndpoints({
 
         getUserData: builder.query<GetUserDataResp, void>({
 
-        getUserData: builder.query({
 
             query: () => ({
                 url: "/user",
@@ -75,6 +74,7 @@ export const authApi = baseApi.enhanceEndpoints({
         // }),
     })
 })
+
 export const {
     useRegisterMutation,
 

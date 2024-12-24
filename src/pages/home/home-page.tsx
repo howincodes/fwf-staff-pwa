@@ -12,13 +12,14 @@ import {
   Settings,
 } from "lucide-react";
 import Logo from "@/assets/logo.svg";
-import AttandanceCard from "./components/attandance-card";
+
 import { useNavigate } from "react-router-dom";
 import { requestLocationPermission } from "@/utils/location-permission-utils";
-import { useLazyGetUserDataQuery } from "@/store/api/authApi";
+
 import { requestCameraPermission } from "@/utils/camera-permission-utils";
 import { useGetDayByDayAttendanceQuery } from "@/store/api/staffAttendanceApi";
-import { Attendance, DayByDayAttendance } from "@/types/staff-attendace-types";
+import { useLazyGetUserDataQuery } from "@/store/api/authApi";
+
 
 
 const HomePage = () => {
@@ -62,6 +63,7 @@ const handlePunchInPunchOut = () => {
 const {data} =useGetDayByDayAttendanceQuery();
 console.log("data",data);
   return (
+    
     <div className="relative min-h-screen bg-zinc-100 dark:bg-zinc-900">
       <ModeToggle />
       <div className="flex items-center justify-between p-5 shadow-md">
@@ -127,9 +129,9 @@ console.log("data",data);
         {/* {data?.map((attandance: DayByDayAttendance ) => (
           <AttandanceCard  attendance={attandance} />
         ))} */}
+        {/* <AttandanceCard/>
         <AttandanceCard/>
-        <AttandanceCard/>
-        <AttandanceCard/>
+        <AttandanceCard/> */}
         
         </div>
 

@@ -1,5 +1,5 @@
 import { baseApi } from "@/config/base-api";
-import { Attendance, AttendanceReq, DayByDayAttendance, PunchInResp, PunchOutResp} from "@/types/staff-attendace-types";
+import {  AllAttendance, AttendanceReq, PunchInResp, PunchOutResp} from "@/types/staff-attendace-types";
 
 
 
@@ -37,7 +37,7 @@ export const attendanceApi = baseApi.enhanceEndpoints({
                   data, 
                 }),
               }),
-        getDayByDayAttendance: builder.query<DayByDayAttendance, void>({
+        getDayByDayAttendance: builder.query<AllAttendance, void>({
             query: () => ({
                 url: "/get-day-by-day-attendance",
                 method: "GET",
