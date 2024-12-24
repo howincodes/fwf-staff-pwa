@@ -19,7 +19,8 @@ import { requestLocationPermission } from "@/utils/location-permission-utils";
 import { requestCameraPermission } from "@/utils/camera-permission-utils";
 import { useGetDayByDayAttendanceQuery } from "@/store/api/staffAttendanceApi";
 import { useLazyGetUserDataQuery } from "@/store/api/authApi";
-
+import { AllAttendance } from "@/types/staff-attendace-types";
+import AttendanceCard from "./components/attandance-card";
 
 
 const HomePage = () => {
@@ -30,12 +31,16 @@ const HomePage = () => {
 
   useEffect(() => {
     getUserData();
+    
   }, []);
 
 const isPunchedInToday = userDataResp?.data?.user?.is_punched_in_today;
 const isPunchedOutToday = userDataResp?.data?.user?.is_punched_out_today;
 
 // const punchedIn = userDataResp?.data?.user?.staff_profile?.is_active === 1;
+
+const {data} =useGetDayByDayAttendanceQuery();
+console.log(data);
 
 const handlePunchInPunchOut = () => {
   requestCameraPermission();
@@ -60,8 +65,6 @@ const handlePunchInPunchOut = () => {
     console.log(file);
   };
 
-const {data} =useGetDayByDayAttendanceQuery();
-console.log("data",data);
   return (
     
     <div className="relative min-h-screen bg-zinc-100 dark:bg-zinc-900">
@@ -126,12 +129,13 @@ console.log("data",data);
       </div>
 
       <div className="space-y-6 py-6 px-3 dark:bg-zinc-800 bg-white h-screen">
-        {/* {data?.map((attandance: DayByDayAttendance ) => (
-          <AttandanceCard  attendance={attandance} />
-        ))} */}
-        {/* <AttandanceCard/>
-        <AttandanceCard/>
-        <AttandanceCard/> */}
+    
+      {
+        data?.attendance?.map((attendance:AllAttendance , index:number) => (
+          <AttendanceCard key={index} attendance={attendance} />
+        ))
+      }
+        
         
         </div>
 

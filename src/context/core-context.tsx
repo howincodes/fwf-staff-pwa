@@ -1,6 +1,6 @@
 import { RootState } from '@/store';
 import { updateCurrentLocation } from '@/store/slice/locationSlice';
-import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
+import React, { createContext,useEffect, useContext, ReactNode } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 // Define the shape of the location data

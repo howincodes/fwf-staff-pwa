@@ -2,17 +2,17 @@ import { AllAttendance } from '@/types/staff-attendace-types'
 import { ChevronRight } from 'lucide-react'
 
 
-const AttandanceCard = ({attandance}:{attandance:AllAttendance}) => {
+const AttendanceCard = ({attendance}:{attendance:AllAttendance}) => {
   return (
     <div className="flex-col ">
     <div className="flex items-center gap-2 justify-between mb-4 ">
-       <div className=" ">{attandance?.date.toString()}</div>
+       <div className=" ">{attendance?.date.toString()}</div>
 
        <div className="flex items-center gap-2 ">
          <div className="flex flex-col">
            <div className="text-[15px]">Present | Approval Pending</div>
            <div className="text-[12px] text-zinc-500 ml-auto">
-             09:03 AM - 05:04 PM Hrs
+            {attendance?.punch_in?.created_at.toString()}
            </div>
          </div>
          <ChevronRight className="w-6 h-6 ml-auto text-zinc-600" />
@@ -23,4 +23,4 @@ const AttandanceCard = ({attandance}:{attandance:AllAttendance}) => {
   )
 }
 
-export default AttandanceCard
+export default AttendanceCard
