@@ -3,7 +3,7 @@ import { useGetUserDataQuery } from "./store/api/authApi"
 
 
 const AppProviders = () => {
-  useGetUserDataQuery("")
+  // useGetUserDataQuery("")
   return (
     <><Outlet/></>
   )
