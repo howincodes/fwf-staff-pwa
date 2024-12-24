@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef} from "react";
 import ModeToggle from "@/components/mode-toggle";
 import { Card } from "@/components/ui/card";
 import {
@@ -15,29 +15,52 @@ import Logo from "@/assets/logo.svg";
 import AttandanceCard from "./components/attandance-card";
 import { useNavigate } from "react-router-dom";
 import { requestLocationPermission } from "@/utils/location-permission-utils";
-// import { openCamera } from "@/utils/view-camera.utils";
-const HomePage = () => {
-  const [isPunchedIn, setIsPunchedIn] = useState(false);
-  const navigate=useNavigate()
-const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const handlePunchIn = () => {
-    setIsPunchedIn(true);
-    requestLocationPermission();
-    fileInputRef.current?.click();
-  
-  };;
+import { useLazyGetUserDataQuery } from "@/store/api/authApi";
+import { requestCameraPermission } from "@/utils/camera-permission-utils";
+import { useGetDayByDayAttendanceQuery } from "@/store/api/staffAttendanceApi";
+import { Attendance, DayByDayAttendance } from "@/types/staff-attendace-types";
 
-  const handlePunchOut = () => {
-    setIsPunchedIn(false);
+
+const HomePage = () => {
+
+  const [getUserData, userDataResp] = useLazyGetUserDataQuery();
+  const navigate = useNavigate();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    getUserData();
+  }, []);
+
+const isPunchedInToday = userDataResp?.data?.user?.is_punched_in_today;
+const isPunchedOutToday = userDataResp?.data?.user?.is_punched_out_today;
+
+// const punchedIn = userDataResp?.data?.user?.staff_profile?.is_active === 1;
+
+const handlePunchInPunchOut = () => {
+  requestCameraPermission();
+  requestLocationPermission();
+
+  if (!isPunchedInToday) {
+    
     fileInputRef.current?.click();
-  };
+  } else if (isPunchedInToday && !isPunchedOutToday) {
+    fileInputRef.current?.click();
+
+
+  }
+};
+
+
+
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     navigate("/punch-page", { state: { attendanceImg: file } });
-    console.log(file); 
+    console.log(file);
   };
-  
+
+const {data} =useGetDayByDayAttendanceQuery();
+console.log("data",data);
   return (
     <div className="relative min-h-screen bg-zinc-100 dark:bg-zinc-900">
       <ModeToggle />
@@ -101,43 +124,57 @@ const fileInputRef = useRef<HTMLInputElement | null>(null);
       </div>
 
       <div className="space-y-6 py-6 px-3 dark:bg-zinc-800 bg-white h-screen">
-        <AttandanceCard />
-        <AttandanceCard />
-        <AttandanceCard />
-        <AttandanceCard />
+        {/* {data?.map((attandance: DayByDayAttendance ) => (
+          <AttandanceCard  attendance={attandance} />
+        ))} */}
+        <AttandanceCard/>
+        <AttandanceCard/>
+        <AttandanceCard/>
+        
+        </div>
 
-      </div>
+      <div>
+        <input
+          ref={fileInputRef} // Link to the ref
+          type="file"
+          accept="image/*" // Allow only image capture from the camera
+          capture="user" // Forcing the camera to be used
+          onChange={handleFileChange}
+          style={{ display: "none" }} // Hide the input element
+        />
 
-    <div>
-      <input
-        ref={fileInputRef} // Link to the ref
-        type="file"
-        accept="image/*"  // Allow only image capture from the camera
-        capture="user"  // Forcing the camera to be used
-        onChange={handleFileChange}
-        style={{ display: 'none' }}  // Hide the input element
-      />
-
-      <div className="fixed bottom-0 flex w-full gap-4 p-4">
-        {!isPunchedIn ? (
-          <div
-            className="flex justify-center items-center gap-2 px-4 w-full py-3 dark:bg-zinc-900 p-3 rounded-2xl border border-input cursor-pointer"
-            onClick={handlePunchIn}
-          >
-            <Coffee className="w-5 h-5" />
-            <h1 className="text-lg">Punch In</h1>
-          </div>
-        ) : (
-          <div
-            className="flex justify-center items-center gap-2 bg-[#FED272] px-4 w-full py-3 rounded-2xl cursor-pointer"
-            onClick={handlePunchOut}
-          >
-            <LogOut className="w-5 h-5 text-black" />
-            <h1 className="text-lg text-black">Punch Out</h1>
-          </div>
-        )}
-      </div>
+        <div className="fixed bottom-20 flex w-full gap-4 p-4">
+          
+        {!isPunchedInToday && !isPunchedOutToday ? (
+  <div
+    className="flex justify-center items-center w-full"
+    onClick={handlePunchInPunchOut}
+  >
+    {/* Show Punch In button */}
+    <div
+      className="flex justify-center items-center gap-2 px-4 w-full py-3 dark:bg-zinc-900 p-3 rounded-2xl border border-input cursor-pointer"
+    >
+      <Coffee className="w-5 h-5" />
+      <h1 className="text-lg">Punch In</h1>
     </div>
+  </div>
+) : isPunchedInToday && !isPunchedOutToday ? (
+  <div
+    className="flex justify-center items-center w-full"
+    onClick={handlePunchInPunchOut}
+  >
+    {/* Show Punch Out button */}
+    <div
+      className="flex justify-center items-center gap-2 bg-[#FED272] px-4 w-full py-3 rounded-2xl cursor-pointer"
+    >
+      <LogOut className="w-5 h-5 text-black" />
+      <h1 className="text-lg text-black">Punch Out</h1>
+    </div>
+  </div>
+) : null}
+
+        </div>
+      </div>
     </div>
   );
 };

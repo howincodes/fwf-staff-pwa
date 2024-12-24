@@ -39,3 +39,8 @@ export interface AuthSliceState {
     currentPhone: string;
   }
   
+
+  export interface GetUserDataResp{
+    message: string;
+    user:    User
+  }

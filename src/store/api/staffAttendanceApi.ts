@@ -1,11 +1,13 @@
 import { baseApi } from "@/config/base-api";
-import { AttendanceReq, PunchInResp, PunchOutResp } from "@/types/staff-attendace-types";
+import { Attendance, AttendanceReq, DayByDayAttendance, PunchInResp, PunchOutResp} from "@/types/staff-attendace-types";
+
 
 
 export const attendanceApi = baseApi.enhanceEndpoints({
     addTagTypes: ["attendance"],
 }).injectEndpoints({
     endpoints: (builder) => ({
+
            getAttendance: builder.query({
             query: () => ({
                 url: "/get-attendances",
@@ -25,16 +27,24 @@ export const attendanceApi = baseApi.enhanceEndpoints({
                 }),
             }),
 
-            punchOut: builder.mutation<PunchOutResp,AttendanceReq>({ 
+            punchOut: builder.mutation<PunchOutResp,AttendanceReq >({
                 query: (data) => ({
-                    url: "/punch-out",
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                    data
+                  url: `/punch-out`, 
+                  method: "POST",
+                  headers: {
+                     "Content-Type": "multipart/form-data",
+                  },
+                  data, 
                 }),
-            }),
+              }),
+        getDayByDayAttendance: builder.query<DayByDayAttendance, void>({
+            query: () => ({
+                url: "/get-day-by-day-attendance",
+                method: "GET",
+               
+           }),
+        })
+            
         })})
 
-export const { useGetAttendanceQuery, usePunchInMutation, usePunchOutMutation } = attendanceApi        
+export const { useGetAttendanceQuery, usePunchInMutation, usePunchOutMutation ,useGetDayByDayAttendanceQuery} = attendanceApi        

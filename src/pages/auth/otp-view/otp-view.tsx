@@ -11,7 +11,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 const OTPView = () => {
   const [otp, setOtp] = useState("");
-  const [verifyOtp,{data}] = useVerifyOtpMutation();
+  const [verifyOtp] = useVerifyOtpMutation();
   const navigate = useNavigate();
   const location = useLocation();
   const phoneNum = location.state.phone;
@@ -21,10 +21,11 @@ const OTPView = () => {
     e.preventDefault();
     try {
 
-       await verifyOtp({ phone: phoneNum, otp }).unwrap();
-       if(data?.user){
+     const res = await verifyOtp({ phone: phoneNum, otp }).unwrap();
+       if(res?.user){
         navigate("/");
        }
+    else
      navigate("/signUp", { state: { phone: phoneNum } });
     } catch (error) {
       console.error("Error verifying OTP:", error);
