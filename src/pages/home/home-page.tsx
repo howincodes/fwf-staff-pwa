@@ -14,6 +14,7 @@ import {
 import Logo from "@/assets/logo.svg";
 import AttandanceCard from "./components/attandance-card";
 import { useNavigate } from "react-router-dom";
+import { requestLocationPermission } from "@/utils/location-permission-utils";
 // import { openCamera } from "@/utils/view-camera.utils";
 const HomePage = () => {
   const [isPunchedIn, setIsPunchedIn] = useState(false);
@@ -21,7 +22,9 @@ const HomePage = () => {
 const fileInputRef = useRef<HTMLInputElement | null>(null);
   const handlePunchIn = () => {
     setIsPunchedIn(true);
+    requestLocationPermission();
     fileInputRef.current?.click();
+  
   };;
 
   const handlePunchOut = () => {

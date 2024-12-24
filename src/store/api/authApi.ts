@@ -1,6 +1,7 @@
 
 import { baseApi } from "@/config/base-api"
-import { LoginReq, LoginRes, OtpReq, OTPResp, RegReq, RegResp } from "@/types/auth/auth-types"
+import { LoginReq, LoginRes, OtpReq, OTPResp, RegReq, RegResp } from "@/types/auth-types"
+
 
 
 export const authApi = baseApi.enhanceEndpoints({
