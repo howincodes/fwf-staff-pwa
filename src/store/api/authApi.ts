@@ -39,7 +39,11 @@ export const authApi = baseApi.enhanceEndpoints({
 
         }),
 
+
         getUserData: builder.query<GetUserDataResp, void>({
+
+        getUserData: builder.query({
+
             query: () => ({
                 url: "/user",
                 method: "GET",
@@ -73,8 +77,10 @@ export const authApi = baseApi.enhanceEndpoints({
 })
 export const {
     useRegisterMutation,
+
     useLazyGetUserDataQuery,
     // useGetUserDataQuery,
+
     useSendOtpMutation,
     useVerifyOtpMutation,
     // useDeleteAccountDataMutation,
