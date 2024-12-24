@@ -37,15 +37,15 @@ export const authApi = baseApi.enhanceEndpoints({
 
         }),
 
-        // getUserData: builder.query({
-        //     query: () => ({
-        //         url: "/user",
-        //         method: "GET",
-        //     }),
-        //     providesTags: ["auth"],
+        getUserData: builder.query({
+            query: () => ({
+                url: "/user",
+                method: "GET",
+            }),
+            providesTags: ["auth"],
 
 
-        // }),
+        }),
 
         // editUserData: builder.mutation({
         //     query: (data) => ({
@@ -71,7 +71,7 @@ export const authApi = baseApi.enhanceEndpoints({
 })
 export const {
     useRegisterMutation,
-    // useGetUserDataQuery,
+    useGetUserDataQuery,
     useSendOtpMutation,
     useVerifyOtpMutation,
     // useDeleteAccountDataMutation,
