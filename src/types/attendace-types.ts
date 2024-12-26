@@ -8,5 +8,7 @@ export interface WorkUpdate {
     updated_at: string
     deleted_at: string
     image_url?: string
+    
+
   }
   
