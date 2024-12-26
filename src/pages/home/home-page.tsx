@@ -1,4 +1,4 @@
-import { useEffect, useRef} from "react";
+import { useEffect, useRef } from "react";
 import ModeToggle from "@/components/mode-toggle";
 import { Card } from "@/components/ui/card";
 import {
@@ -22,42 +22,37 @@ import { useLazyGetUserDataQuery } from "@/store/api/authApi";
 import { AllAttendance } from "@/types/staff-attendace-types";
 import AttendanceCard from "./components/attandance-card";
 
-
 const HomePage = () => {
-
   const [getUserData, userDataResp] = useLazyGetUserDataQuery();
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     getUserData();
-    
   }, []);
 
-const isPunchedInToday = userDataResp?.data?.user?.is_punched_in_today;
-const isPunchedOutToday = userDataResp?.data?.user?.is_punched_out_today;
+  const isPunchedInToday = userDataResp?.data?.user?.is_punched_in_today;
+  const isPunchedOutToday = userDataResp?.data?.user?.is_punched_out_today;
 
-// const punchedIn = userDataResp?.data?.user?.staff_profile?.is_active === 1;
+  const { data} = useGetDayByDayAttendanceQuery({ month: '2024-12' });
 
-const {data} =useGetDayByDayAttendanceQuery();
-console.log(data);
+ 
+  
 
-const handlePunchInPunchOut = () => {
-  requestCameraPermission();
-  requestLocationPermission();
-
-  if (!isPunchedInToday) {
-    
-    fileInputRef.current?.click();
-  } else if (isPunchedInToday && !isPunchedOutToday) {
-    fileInputRef.current?.click();
-
-
-  }
-};
-
-
-
+  const handlePunchInPunchOut = () => {
+    requestCameraPermission();
+    requestLocationPermission();
+  
+    // If user hasn't punched in today, show Punch In button (trigger the file input click)
+    if (!isPunchedInToday) {
+      fileInputRef.current?.click();
+    }
+    // If user has punched in but hasn't punched out, show Punch Out button (trigger the file input click)
+    else if (isPunchedInToday && !isPunchedOutToday) {
+      fileInputRef.current?.click();
+    }
+  };
+  
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -66,7 +61,6 @@ const handlePunchInPunchOut = () => {
   };
 
   return (
-    
     <div className="relative min-h-screen bg-zinc-100 dark:bg-zinc-900">
       <ModeToggle />
       <div className="flex items-center justify-between p-5 shadow-md">
@@ -129,15 +123,14 @@ const handlePunchInPunchOut = () => {
       </div>
 
       <div className="space-y-6 py-6 px-3 dark:bg-zinc-800 bg-white h-screen">
-    
-      {
-        data?.attendance?.map((attendance:AllAttendance , index:number) => (
+      {data?.attendance?.length ? (
+        data.attendance.map((attendance: AllAttendance, index: number) => (
           <AttendanceCard key={index} attendance={attendance} />
         ))
-      }
-        
-        
-        </div>
+      ) : (
+        <div className="text-center text-lg text-zinc-500">No attendance record found</div>
+      )}
+    </div>
 
       <div>
         <input
@@ -150,36 +143,32 @@ const handlePunchInPunchOut = () => {
         />
 
         <div className="fixed bottom-20 flex w-full gap-4 p-4">
-          
-        {!isPunchedInToday && !isPunchedOutToday ? (
-  <div
-    className="flex justify-center items-center w-full"
-    onClick={handlePunchInPunchOut}
-  >
-    {/* Show Punch In button */}
-    <div
-      className="flex justify-center items-center gap-2 px-4 w-full py-3 dark:bg-zinc-900 p-3 rounded-2xl border border-input cursor-pointer"
-    >
-      <Coffee className="w-5 h-5" />
-      <h1 className="text-lg">Punch In</h1>
-    </div>
-  </div>
-) : isPunchedInToday && !isPunchedOutToday ? (
-  <div
-    className="flex justify-center items-center w-full"
-    onClick={handlePunchInPunchOut}
-  >
-    {/* Show Punch Out button */}
-    <div
-      className="flex justify-center items-center gap-2 bg-[#FED272] px-4 w-full py-3 rounded-2xl cursor-pointer"
-    >
-      <LogOut className="w-5 h-5 text-black" />
-      <h1 className="text-lg text-black">Punch Out</h1>
-    </div>
-  </div>
-) : null}
+          {!isPunchedInToday && !isPunchedOutToday ? (
+            <div
+              className="flex justify-center items-center w-full"
+              onClick={handlePunchInPunchOut}
+            >
 
-        </div>
+              <div className="flex justify-center items-center gap-2 px-4 w-full py-3 dark:bg-zinc-900 p-3 rounded-2xl border border-input cursor-pointer">
+                <Coffee className="w-5 h-5" />
+                <h1 className="text-lg">Punch In</h1>
+              </div>
+            </div>
+          ) : isPunchedInToday && !isPunchedOutToday ? (
+            <div
+              className="flex justify-center items-center w-full"
+              onClick={handlePunchInPunchOut}
+            >
+
+              <div className="flex justify-center items-center gap-2 bg-[#FED272] px-4 w-full py-3 rounded-2xl cursor-pointer">
+                <LogOut className="w-5 h-5 text-black" />
+                <h1 className="text-lg text-black">Punch Out</h1>
+              </div>
+            </div>
+          ) : null}
+        </div> 
+
+
       </div>
     </div>
   );
