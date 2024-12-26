@@ -1,5 +1,5 @@
 import { baseApi } from "@/config/base-api";
-import {  AllAttendance, AttendanceReq, DayByDayAttendance, PunchInResp, PunchOutResp} from "@/types/staff-attendace-types";
+import {   AttendanceReq,  DayByDayAttendance,  PunchInResp, PunchOutResp} from "@/types/staff-attendace-types";
 
 
 
@@ -37,14 +37,25 @@ export const attendanceApi = baseApi.enhanceEndpoints({
                   data, 
                 }),
               }),
-        getDayByDayAttendance: builder.query<AllAttendance [], void>({
-            query: () => ({
-                url: "/get-day-by-day-attendance",
-                method: "GET",
-               
-           }),
-        })
+
+
+            //   getDayByDayAttendance: builder.query<AllAttendance[], { month?: string }>({
+            //     query: ({ month }) => ({
+            //         url: `/get-day-by-day-attendance${month ? `?month=${month}` : ''}`,
+            //         method: "GET",
+            //     }),
+            // }),
+            getDayByDayAttendance: builder.query<DayByDayAttendance, { month?: string }>({
+                query: ({ month }) => {
+                    console.log('Month parameter:', month); // Debugging line
+                    return {
+                        url: `/get-day-by-day-attendance${month ? `?month=${month}` : ''}`,
+                        method: "GET",
+                    };
+                },
+            }),
             
+             
         })})
 
 export const { useGetAttendanceQuery, usePunchInMutation, usePunchOutMutation ,useGetDayByDayAttendanceQuery} = attendanceApi        

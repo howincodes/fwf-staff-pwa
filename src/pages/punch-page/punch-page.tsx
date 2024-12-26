@@ -26,38 +26,40 @@ const PunchPage = () => {
   const [punchInData,{isLoading}]=usePunchInMutation();
   const [punchOutData,{isLoading:isPunchOutLoading}]=usePunchOutMutation();
 
+  const isPunchedInToday = userDataResp?.data?.user?.is_punched_in_today;
+  const isPunchedOutToday = userDataResp?.data?.user?.is_punched_out_today;
+  const handleSubmit = async () => {
+    try {
+      if (!isPunchedInToday) {
+        await punchInData({
+          image: attendanceImg,
+          latitude: position?.lat.toString(),
+          longitude: position?.lng.toString(),
+          address: formattedAddress,
+        }).unwrap();
+        await getUserData().unwrap();
+        navigate("/");
+        successToast("Punched In Successfully");
+        return;
+      }
+      if (isPunchedInToday && !isPunchedOutToday) {
+        await punchOutData({
+          image: attendanceImg,
+          latitude: position?.lat.toString(),
+          longitude: position?.lng.toString(),
+          address: formattedAddress,
+        }).unwrap();
+        
+        await getUserData().unwrap();
 
-const handleSubmit = async () => {
-  try {
-
-    if (userDataResp?.data?.user?.staff_profile?.is_active === 0) {
-      await punchInData({
-        image: attendanceImg,
-        latitude: position?.lat.toString(),
-        longitude: position?.lng.toString(),
-        address: formattedAddress,
-      }).unwrap();
-      await getUserData().unwrap();
-   
-      navigate("/");
-      successToast("Punched In Successfully");
-      return ;
+        navigate("/");
+        successToast("Punched Out Successfully");
+      }
+    } catch (error) {
+      console.error("Error in punching process:", error);
     }
-    await punchOutData({
-      image: attendanceImg,
-      latitude: position?.lat.toString(),
-      longitude: position?.lng.toString(),
-      address: formattedAddress,
-    }).unwrap();
-
-    await getUserData().unwrap();
+  };
   
-    navigate("/");
-    successToast("Punched Out Successfully");
-  } catch (error) {
-    console.error("Error in punching process:", error);
-  }
-};
 
   
 
