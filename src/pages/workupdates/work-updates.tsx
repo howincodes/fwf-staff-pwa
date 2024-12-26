@@ -5,22 +5,30 @@ import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { useRef, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux-hook";
 
 const WorkUpdates = () => {
   const { data: workUpdatesData } = useGetWorkUpdatesQuery();
   const [createWorkUpdate] = useCreateWorkUpdateMutation();
-  const formattedDate = new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "2-digit",
-    year: "numeric",
-  }).format(new Date());
-
+  const formatDate = (dateString: string) => {
+    return new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true, // Enable AM/PM format
+      timeZone: "UTC", // Parse as UTC
+    }).format(new Date(dateString));
+  };
+  
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [remarks, setRemarks] = useState(""); // State to hold remarks
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-
+  const user = useAppSelector((state)=>state.auth.user);
   const handleImageCapture = () => {
     fileInputRef.current?.click();
   };
@@ -30,7 +38,6 @@ const WorkUpdates = () => {
       alert("Please provide both remarks and an image.");
       return;
     }
-
     try {
       // Call the createWorkUpdate mutation
       await createWorkUpdate({
@@ -59,6 +66,7 @@ const WorkUpdates = () => {
     setRemarks(event.target.value); // Update remarks state
   };
   
+  console.log(workUpdatesData,"datakkkkk")
 
   return (
     <div className="min-h-screen flex flex-col bg-zinc-100 dark:bg-zinc-900 gap-4 w-screen overflow-x-hidden overflow-y-scroll">
@@ -79,30 +87,36 @@ const WorkUpdates = () => {
       </div>
 
       <div className="flex justify-between w-full bg-white dark:bg-zinc-800 px-4 text-md py-6">
-        <h1 className="font-medium">Faris Basha TM</h1>
-        <h2 className="text-zinc-500">{formattedDate}</h2>
+        <h1 className="font-medium">{user?.name}
+        </h1>
+        {/* <h2 className="text-zinc-500">{formatDate}</h2> */}
       </div>
-      <div className="flex justify-between items-center w-full bg-white dark:bg-zinc-800 px-4 text-md py-6">
+      {/* <div className="flex justify-between items-center w-full bg-white dark:bg-zinc-800 px-4 text-md py-6">
         <div className="flex flex-col gap-1">
           <h1 className="font-medium">Regular Shift New</h1>
           <h2 className="text-zinc-500 text-sm">09-28 AM - 05-00 PM</h2>
         </div>
         <h2 className="font-medium">Present</h2>
-      </div>
+      </div> */}
       <div className="flex flex-col w-full bg-white dark:bg-zinc-800 px-4 text-md pt-6">
         <h1 className="font-medium mb-4">Logs</h1>
         {workUpdatesData?.map((item, index) => (
           <div className="w-full flex flex-col mb-4" key={item?.id}>
             <div className="w-full flex gap-3 items-center">
               <div>
-                <CircleUserRound className="w-7 h-7" />
+              <img
+              src={item?.image_url}
+              alt="User"
+              className="w-7 h-7 rounded-full object-cover"
+            />
               </div>
               <div className="flex-col text-sm">
-                <h1>Punched Out at 05:00 PM | Regular Shift New</h1>
+              <h1>{item?.created_at ? formatDate (item.created_at) : "N/A"}</h1>
+
                 <h2 className="text-zinc-500 w-[85%] truncate mt-0.5 text-xs">
-                  By HOWINCLOUD SOLUTIONS PRIVATE LIMITED on 16 Dec,2024
+                {item?.remarks}
                 </h2>
-              </div> 
+              </div>  
             </div>
             {index < workUpdatesData.length - 1 && (
               <div className="border-b w-full border-gray-500 my-3"></div>
