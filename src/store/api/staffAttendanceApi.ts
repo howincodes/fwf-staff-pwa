@@ -39,12 +39,7 @@ export const attendanceApi = baseApi.enhanceEndpoints({
               }),
 
 
-            //   getDayByDayAttendance: builder.query<AllAttendance[], { month?: string }>({
-            //     query: ({ month }) => ({
-            //         url: `/get-day-by-day-attendance${month ? `?month=${month}` : ''}`,
-            //         method: "GET",
-            //     }),
-            // }),
+          
             getDayByDayAttendance: builder.query<DayByDayAttendance, { month?: string }>({
                 query: ({ month }) => {
                     console.log('Month parameter:', month); // Debugging line
