@@ -5,6 +5,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { useVerifyOtpMutation } from "@/store/api/authApi";
+import { requestLocationPermission, } from "@/utils/camera-permission-utils";
 import { ChevronLeft } from "lucide-react";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -18,6 +19,7 @@ const OTPView = () => {
   
   // Handle OTP verification
   const handleVerifyOtp = async (e:React.FormEvent) => {
+    requestLocationPermission()
     e.preventDefault();
     try {
 

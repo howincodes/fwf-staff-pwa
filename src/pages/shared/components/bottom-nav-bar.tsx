@@ -8,7 +8,7 @@ import { Link, useLocation } from 'react-router-dom'
 const navItems = [
   { name: 'Home', href: '/', icon: Home },
   { name: 'Profile', href: '/profile', icon: User },
-  { name: 'Attendance', href: '/attendance-details', icon: Calendar },
+  { name: 'Attendance', href: '/work-update', icon: Calendar },
 ]
 
 export function BottomNav() {

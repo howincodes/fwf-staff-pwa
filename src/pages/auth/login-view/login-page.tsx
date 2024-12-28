@@ -103,7 +103,7 @@ const LoginView = () => {
           </div>
         </div>
 
-        <div className="flex w-full px-6 items-center">
+        <div className="flex w-full items-center">
           <Button
             form="login-form"
             type="submit"

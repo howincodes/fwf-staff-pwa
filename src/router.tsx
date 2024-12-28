@@ -9,6 +9,7 @@ import OTPView from './pages/auth/otp-view/otp-view';
 import { SignUpView } from './pages/auth/sign-up/sign-up-view';
 import WorkUpdates from './pages/workupdates/work-updates';
 import MainLayout from './pages/shared/main-layout';
+import ProtectedRoute from './components/protected-route';
 
 
 
@@ -17,19 +18,21 @@ const router = createBrowserRouter([
     path: "/",
     element: <AppProviders />,
     children: [
-      // { path: "/", element: <HomePage /> },
       { path:"/login",element: <LoginView/>},
       { path:"/otp",element: <OTPView/>},
       { path:"/signUp",element: <SignUpView/>},
-      // { path: "/profile", element: <ProfilePage /> },
       { path: "/punch-page", element: <PunchPage /> },
-      // { path: "/work-update", element: <WorkUpdates /> },
       {
-        element: <MainLayout/>, // Layout with Bottom Navigation
+        element: <MainLayout/>, 
         children: [
-          { path: "/", element: <HomePage /> },
-          { path: "/profile", element: <ProfilePage /> },
-          { path: "/work-update", element: <WorkUpdates /> },
+          {
+            element: <ProtectedRoute />, 
+            children: [
+              { path: "/", element: <HomePage /> },
+              { path: "/profile", element: <ProfilePage /> },
+              { path: "/work-update", element: <WorkUpdates /> },
+            ],
+          },
         ],
       },
 

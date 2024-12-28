@@ -27,3 +27,19 @@ export interface StaffProfile {
     updated_at: Date;
 }
 
+export interface LiveLocationResp{
+    message: string;
+    live_location_data: LiveLocationData;
+}
+
+export interface LiveLocationData{ 
+    latitude: number;
+    longitude: number;
+    address: string;
+}
+
+export interface LiveLocationReq{
+    latitude: number;
+    longitude: number;
+    address: string;
+}

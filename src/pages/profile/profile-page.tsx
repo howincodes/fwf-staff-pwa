@@ -45,7 +45,7 @@ const ProfilePage = () => {
       </div>
 
       {/* Profile Tiles */}
-      <div className="mt-8 space-y-3">
+      <div className="mt-8 space-y-3 pb-20">
         <ProfileTiles title="Security Password" icon={IdCard} border />
         <ProfileTiles title="Your bank details" icon={CreditCard} border />
         <ProfileTiles title="Personal info" icon={User} border />

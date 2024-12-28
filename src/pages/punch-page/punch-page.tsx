@@ -28,6 +28,8 @@ const PunchPage = () => {
 
   const isPunchedInToday = userDataResp?.data?.user?.is_punched_in_today;
   const isPunchedOutToday = userDataResp?.data?.user?.is_punched_out_today;
+
+  
   const handleSubmit = async () => {
     try {
       if (!isPunchedInToday) {
@@ -59,8 +61,6 @@ const PunchPage = () => {
       console.error("Error in punching process:", error);
     }
   };
-  
-
   
 
 
