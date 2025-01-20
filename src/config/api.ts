@@ -1,6 +1,6 @@
 import axios from "axios";
 // export const isLocal = import.meta.env.VITE_IS_LOCAL == "true" ? true : false;
-const isLocal = true
+const isLocal = false
 
 
 export const WEBSITE_API_URL = isLocal ? 'http://fwf_fasna.test/api/staff' : 'https://fitwithfazna.howincloud.com/api/staff'

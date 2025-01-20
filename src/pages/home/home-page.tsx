@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import ModeToggle from "@/components/mode-toggle";
 import { Card } from "@/components/ui/card";
 import {
@@ -16,33 +16,55 @@ import Logo from "@/assets/logo.svg";
 import { useNavigate } from "react-router-dom";
 import { requestLocationPermission } from "@/utils/location-permission-utils";
 
-import { requestCameraPermission } from "@/utils/camera-permission-utils";
-import { useGetDayByDayAttendanceQuery } from "@/store/api/staffAttendanceApi";
+
+import { useLazyGetDayByDayAttendanceQuery } from "@/store/api/staffAttendanceApi";
 import { useLazyGetUserDataQuery } from "@/store/api/authApi";
 import { AllAttendance } from "@/types/staff-attendace-types";
 import AttendanceCard from "./components/attandance-card";
+import { requestCameraPermission } from "@/utils/camera-permission-utils";
+import { addMonths, subMonths, format } from "date-fns";
 
 const HomePage = () => {
   const [getUserData, userDataResp] = useLazyGetUserDataQuery();
+  const [getDayByDayAttendance, dayByDayAttendanceData] = useLazyGetDayByDayAttendanceQuery();
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+
+
+  const handleNextMonth = () => {
+    setCurrentDate((prevDate) => addMonths(prevDate, 1));
+  };
+
+  const handlePreviousMonth = () => {
+    setCurrentDate((prevDate) => subMonths(prevDate, 1));
+  };
+
+  // Format the current month and year for display
+  const formattedMonthYear = format(currentDate, "MMMM yyyy");
 
   useEffect(() => {
     getUserData();
   }, []);
 
+  useEffect(() => {
+    getDayByDayAttendance({ month: format(currentDate, "yyyy-MM") });
+  }, [currentDate]);
+
+
   const isPunchedInToday = userDataResp?.data?.user?.is_punched_in_today;
   const isPunchedOutToday = userDataResp?.data?.user?.is_punched_out_today;
 
-  const { data} = useGetDayByDayAttendanceQuery({ month: '2024-12' });
+  // const { data } = useGetDayByDayAttendanceQuery({ month: '2024-12' });
 
- 
-  
+
+
 
   const handlePunchInPunchOut = () => {
     requestCameraPermission();
     requestLocationPermission();
-  
+
     // If user hasn't punched in today, show Punch In button (trigger the file input click)
     if (!isPunchedInToday) {
       fileInputRef.current?.click();
@@ -52,7 +74,7 @@ const HomePage = () => {
       fileInputRef.current?.click();
     }
   };
-  
+
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -81,26 +103,32 @@ const HomePage = () => {
       </div>
 
       <div className="flex items-center justify-between p-4 bg-white dark:bg-zinc-800">
-        <ChevronLeft className="w-6 h-6 text-[#FED272]" />
-        <h2 className="text-xl ">Dec 2024</h2>
-        <ChevronRight className="w-6 h-6 text-[#FED272]" />
+        <ChevronLeft
+          className="w-6 h-6 text-[#FED272] cursor-pointer"
+          onClick={handlePreviousMonth}
+        />
+        <h2 className="text-xl">{formattedMonthYear}</h2>
+        <ChevronRight
+          className="w-6 h-6 text-[#FED272] cursor-pointer"
+          onClick={handleNextMonth}
+        />
       </div>
 
       <hr className="border-zinc-300 dark:border-zinc-700" />
       <div className="grid grid-cols-3 gap-2 px-4 py-4 bg-white dark:bg-zinc-800">
-        <Card className="p-3">
+        <Card className="p-3 flex flex-col items-center ">
           <div className="text-gray-500">Present</div>
-          <div className="text-lg">10 (+2)</div>
+          <div className="text-lg">{dayByDayAttendanceData?.data?.presentDays}</div>
         </Card>
-        <Card className="p-3">
+        <Card className="p-3 flex flex-col items-center">
           <div className="text-gray-500">Absent</div>
-          <div className="text-lg">0</div>
+          <div className="text-lg">{dayByDayAttendanceData?.data?.absentDays}</div>
         </Card>
-        <Card className="p-3">
-          <div className="text-gray-500">Half Days</div>
-          <div className="text-lg">0</div>
+        <Card className="p-3 flex flex-col items-center">
+          <div className="text-gray-500">Weekly Off</div>
+          <div className="text-lg">{dayByDayAttendanceData?.data?.weeklyOff}</div>
         </Card>
-        <Card className="p-3">
+        {/* <Card className="p-3">
           <div className="text-gray-500">Leave</div>
           <div className="flex items-center gap-2">
             <div className="text-lg">4</div>
@@ -114,7 +142,7 @@ const HomePage = () => {
         <Card className="p-3">
           <div className="text-gray-500">Less Hours</div>
           <div className="text-lg">03:38</div>
-        </Card>
+        </Card> */}
       </div>
 
       <div className="flex flex-col items-center justify-center p-4 mt-5 mb-8 bg-white dark:bg-zinc-800">
@@ -122,15 +150,15 @@ const HomePage = () => {
         <div className="text-lg mt-2">Manage Leaves</div>
       </div>
 
-      <div className="space-y-6 py-6 px-3 dark:bg-zinc-800 bg-white h-screen">
-      {data?.attendance?.length ? (
-        data.attendance.map((attendance: AllAttendance, index: number) => (
-          <AttendanceCard key={index} attendance={attendance} />
-        ))
-      ) : (
-        <div className="text-center text-lg text-zinc-500">No attendance record found</div>
-      )}
-    </div>
+      <div className="space-y-6 py-6 px-3 dark:bg-zinc-800 bg-white h-full overflow-y-scroll">
+        {dayByDayAttendanceData?.data?.attendance?.length ? (
+          dayByDayAttendanceData?.data?.attendance.map((attendance: AllAttendance, index: number) => (
+            <AttendanceCard key={index} attendance={attendance} />
+          ))
+        ) : (
+          <div className="text-center text-lg text-zinc-500">No attendance record found</div>
+        )}
+      </div>
 
       <div>
         <input
@@ -166,7 +194,7 @@ const HomePage = () => {
               </div>
             </div>
           ) : null}
-        </div> 
+        </div>
 
 
       </div>

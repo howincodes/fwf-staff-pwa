@@ -51,4 +51,4 @@ export const attendanceApi = baseApi.enhanceEndpoints({
              
         })})
 
-export const { useGetAttendanceQuery, usePunchInMutation, usePunchOutMutation ,useGetDayByDayAttendanceQuery} = attendanceApi        
+export const { useGetAttendanceQuery, usePunchInMutation, usePunchOutMutation ,useGetDayByDayAttendanceQuery ,useLazyGetDayByDayAttendanceQuery} = attendanceApi        

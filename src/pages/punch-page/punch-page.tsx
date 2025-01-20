@@ -4,32 +4,52 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useHowinMaps } from "@/modules/howin-maps";
 import { requestLocationPermission } from "@/utils/location-permission-utils";
-import {  usePunchInMutation, usePunchOutMutation } from "@/store/api/staffAttendanceApi";
+import { usePunchInMutation, usePunchOutMutation } from "@/store/api/staffAttendanceApi";
 import { useLazyGetUserDataQuery } from "@/store/api/authApi";
 import { successToast } from "@/utils/common-utils";
+
 
 
 type Position = { lat: number; lng: number } | null;
 
 const PunchPage = () => {
-  const location=useLocation()
-  const attendanceImg=location.state.attendanceImg
+  const location = useLocation()
+  const attendanceImg = location.state.attendanceImg
   const [refetch, setRefetch] = useState(false);
   const { geocodeLatLng } = useHowinMaps();
   const [formattedAddress, setFormattedAddress] = useState("");
   const [isLocLoading, setIsLocLoading] = useState(false);
   const [position, setPosition] = useState<Position>(null);
-  const [getUserData,userDataResp] = useLazyGetUserDataQuery();
+  const [getUserData, userDataResp] = useLazyGetUserDataQuery();
 
   const navigate = useNavigate();
 
-  const [punchInData,{isLoading}]=usePunchInMutation();
-  const [punchOutData,{isLoading:isPunchOutLoading}]=usePunchOutMutation();
+  const [punchInData, { isLoading }] = usePunchInMutation();
+  const [punchOutData, { isLoading: isPunchOutLoading }] = usePunchOutMutation();
 
   const isPunchedInToday = userDataResp?.data?.user?.is_punched_in_today;
   const isPunchedOutToday = userDataResp?.data?.user?.is_punched_out_today;
 
-  
+  useEffect(() => {
+    window.addEventListener("message", handleLocationUpdate);
+
+    return () => {
+      window.removeEventListener("message", handleLocationUpdate);
+    };
+  }, []);
+
+  const handleLocationUpdate = (event: MessageEvent) => {
+    const message = JSON.parse(event.data);
+    if (message.type === "LOCATION_UPDATED") {
+      const location = message.payload;
+      // alert(`Location !!!!: ${location?.latitude}, ${location?.longitude}`);
+      setPosition({ lat: location?.latitude, lng: location?.longitude });
+    }
+  };
+
+
+
+
   const handleSubmit = async () => {
     try {
       if (!isPunchedInToday) {
@@ -51,7 +71,7 @@ const PunchPage = () => {
           longitude: position?.lng.toString(),
           address: formattedAddress,
         }).unwrap();
-        
+
         await getUserData().unwrap();
 
         navigate("/");
@@ -61,55 +81,59 @@ const PunchPage = () => {
       console.error("Error in punching process:", error);
     }
   };
-  
 
 
-useEffect(() => {
-  const handleCurrentLocation = () => {
-    requestLocationPermission();
-    if (navigator.geolocation) {  
-      setIsLocLoading(true);
-      navigator.geolocation.getCurrentPosition((position) => {
-        const { latitude, longitude } = position.coords;
-        setPosition({ lat: latitude, lng: longitude });
-        setIsLocLoading(false);
-      });
-    }
 
-  }
-  handleCurrentLocation();
-
-}, []);
-  
-const handleGeo = () => {
-  if (position) {
-    geocodeLatLng(position) // Only call if position is not null
-      .then((results) => {
-        if (results.length > 0) {
-          const address = results[0];
-          setFormattedAddress(address.formatted_address);
-          console.log("Formatted Address:", address.formatted_address);
-        } else {
-          setFormattedAddress("No address found.");
+  useEffect(() => {
+    const handleCurrentLocation = () => {
+      if (window.ReactNativeWebView) {
+        requestLocationPermission();
+      }
+      else {
+        if (navigator.geolocation) {
+          setIsLocLoading(true);
+          navigator.geolocation.getCurrentPosition((position) => {
+            const { latitude, longitude } = position.coords;
+            setPosition({ lat: latitude, lng: longitude });
+            setIsLocLoading(false);
+          });
         }
-      })
-      .catch((error) => {
-        console.error("Geocode failed:", error);
-        setFormattedAddress("Error fetching address.");
-      });
-  }
-};
+      }
+
+    }
+    handleCurrentLocation();
+
+  }, []);
+
+  const handleGeo = () => {
+    if (position) {
+      geocodeLatLng(position) // Only call if position is not null
+        .then((results) => {
+          if (results.length > 0) {
+            const address = results[0];
+            setFormattedAddress(address.formatted_address);
+            // alert("Address: " + address.formatted_address);
+          } else {
+            setFormattedAddress("No address found.");
+          }
+        })
+        .catch((error) => {
+          console.error("Geocode failed:", error);
+          setFormattedAddress("Error fetching address.");
+        });
+    }
+  };
 
 
-useEffect(() => {
-  handleGeo();
-}, [position]);
+  useEffect(() => {
+    handleGeo();
+  }, [position]);
 
 
 
-useEffect(() => {
-  getUserData()
-},[getUserData])
+  useEffect(() => {
+    getUserData()
+  }, [getUserData])
 
   return (
     <div>
@@ -117,7 +141,7 @@ useEffect(() => {
         <ChevronLeft onClick={() => navigate("/")} />
       </div>
       <div className="h-[65vh] object-cover">
-      {attendanceImg ? (
+        {attendanceImg ? (
           <img
             src={URL.createObjectURL(attendanceImg)}
             alt="Attendance"
@@ -134,14 +158,13 @@ useEffect(() => {
         <h2 className="text-gray-500 text-sm">{new Intl.DateTimeFormat('en-US', { day: '2-digit', month: 'short', weekday: 'short', hour: 'numeric', minute: '2-digit' }).format(new Date())}</h2>
         <div className="flex mt-1 items-center justify-between gap-2 text-sm bg-zinc-800 px-2 py-2 rounded-sm w-full">
           <MapPinned className="h-4 w-4 dark:text-white text-black " />
-         { isLocLoading? <div className="flex justify-center items-center"> <Loader2 className="animate-spin text-white"/>  </div> : <h1 className={`w-[70vw] truncate text-white `}>
+          {isLocLoading ? <div className="flex justify-center items-center"> <Loader2 className="animate-spin text-white" />  </div> : <h1 className={`w-[70vw] truncate text-white `}>
             {formattedAddress}
- 
+
           </h1>}
           <RefreshCcw
-            className={`h-4 w-4 text-white ${
-              refetch ? "animate-spin duration-1000" : ""
-            } `}
+            className={`h-4 w-4 text-white ${refetch ? "animate-spin duration-1000" : ""
+              } `}
             onClick={() => {
               setRefetch(true);
               setTimeout(() => setRefetch(false), 1000);
@@ -151,8 +174,7 @@ useEffect(() => {
         </div>
         <div className="fixed bottom-4 w-full px-6 left-0 right-0 flex justify-center">
           <Button
-            className={`bg-yellow-500 w-full py-3 rounded-lg ${
-              isLocLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+            className={`bg-yellow-500 w-full py-3 rounded-lg ${isLocLoading ? "opacity-50 cursor-not-allowed" : ""}`}
             onClick={handleSubmit}
             disabled={isLocLoading}
           >
