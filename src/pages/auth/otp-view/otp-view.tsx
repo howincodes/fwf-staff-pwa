@@ -5,7 +5,8 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { useVerifyOtpMutation } from "@/store/api/authApi";
-import { requestLocationPermission, } from "@/utils/camera-permission-utils";
+import { requestLocationPermission } from "@/utils/location-permission-utils";
+
 import { ChevronLeft } from "lucide-react";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -16,19 +17,19 @@ const OTPView = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const phoneNum = location.state.phone;
-  
+
   // Handle OTP verification
-  const handleVerifyOtp = async (e:React.FormEvent) => {
+  const handleVerifyOtp = async (e: React.FormEvent) => {
     requestLocationPermission()
     e.preventDefault();
     try {
 
-     const res = await verifyOtp({ phone: phoneNum, otp }).unwrap();
-       if(res?.user){
+      const res = await verifyOtp({ phone: phoneNum, otp }).unwrap();
+      if (res?.user) {
         navigate("/");
-       }
-    else
-     navigate("/signUp", { state: { phone: phoneNum } });
+      }
+      else
+        navigate("/signUp", { state: { phone: phoneNum } });
     } catch (error) {
       console.error("Error verifying OTP:", error);
     }

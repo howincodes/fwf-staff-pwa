@@ -2,7 +2,7 @@ import AuthGirl from "@/assets/auth/authGirl.png";
 import Logo from "@/assets/logo.svg";
 // import { FaApple, FaGoogle } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
-import { ChevronDown} from "lucide-react";
+import { ChevronDown } from "lucide-react";
 // import { useSendOtpMutation } from "@/store/slices/auth/authApi";
 // import { errorToast, isRtl, normalizePhone } from "@/utils/common-utils";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 // import { useTranslation } from "react-i18next";
 // import {triggerNotificationHaptic,triggerSelectionHaptic} from "@/utils/haptic-utils";
 // import {clearPersonalInfo,setPIName,} from "@/store/slices/auth/personalInfoSlice";
-import {  useState } from "react";
+import { useState } from "react";
 // import { toast } from "@/components/ui/use-toast";
 // import { useGetLanguagesQuery } from "@/store/slices/languages/languagesApi";
 // import i18n from "@/i18n";
@@ -29,20 +29,20 @@ import { useSendOtpMutation } from "@/store/api/authApi";
 // import { isRtl } from "@/utils/common-utils";
 
 const LoginView = () => {
-  const [ phoneNumber, setPhoneNumber] = useState("");
-    const [sendOtp] = useSendOtpMutation();
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [sendOtp] = useSendOtpMutation();
   const navigate = useNavigate();
 
 
 
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!phoneNumber) {
       console.error("Phone number is required.");
       return;
     }
-  
+
     try {
       const response = await sendOtp({
         phone: phoneNumber,
@@ -53,7 +53,7 @@ const LoginView = () => {
     }
     navigate("/otp", { state: { phone: phoneNumber } });
   };
-  
+
 
 
 
@@ -85,7 +85,7 @@ const LoginView = () => {
               variant={"outline"}
               className="mt-2 h-[7vh] text-input-foreground text-md rounded-2xl px-5"
             >
-              🇬🇬{" "}
+              🇮🇳{" "}
               <span>
                 <ChevronDown />
               </span>

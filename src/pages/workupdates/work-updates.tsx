@@ -1,14 +1,14 @@
-import { useCreateWorkUpdateMutation, useGetWorkUpdatesQuery } from "@/store/api/attendanceApi";
-import { ChevronLeft, CircleUserRound, Plus } from "lucide-react";
+import { useCreateWorkUpdateMutation, useLazyGetWorkUpdatesQuery } from "@/store/api/attendanceApi";
+import { ChevronLeft, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
-import { useAppDispatch, useAppSelector } from "@/hooks/redux-hook";
+import { useAppSelector } from "@/hooks/redux-hook";
 
 const WorkUpdates = () => {
-  const { data: workUpdatesData } = useGetWorkUpdatesQuery();
+  const [getWorkUpdates, { data: workUpdatesData }] = useLazyGetWorkUpdatesQuery();
   const [createWorkUpdate] = useCreateWorkUpdateMutation();
   const formatDate = (dateString: string) => {
     return new Intl.DateTimeFormat("en-US", {
@@ -22,13 +22,13 @@ const WorkUpdates = () => {
       timeZone: "UTC", // Parse as UTC
     }).format(new Date(dateString));
   };
-  
+
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [remarks, setRemarks] = useState(""); // State to hold remarks
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const user = useAppSelector((state)=>state.auth.user);
+  const user = useAppSelector((state) => state.auth.user);
   const handleImageCapture = () => {
     fileInputRef.current?.click();
   };
@@ -47,6 +47,7 @@ const WorkUpdates = () => {
       setIsOpen(false); // Close the drawer
       setRemarks(""); // Reset the form
       setSelectedImage(null); // Reset the image
+      getWorkUpdates().refetch();
       // Optionally, you may want to refetch work updates or show a success message
     } catch (error) {
       console.error("Failed to submit work update:", error);
@@ -65,8 +66,10 @@ const WorkUpdates = () => {
   const handleRemarksChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setRemarks(event.target.value); // Update remarks state
   };
-  
-  console.log(workUpdatesData,"datakkkkk")
+
+  useEffect(() => {
+    getWorkUpdates().refetch();
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col bg-zinc-100 dark:bg-zinc-900 gap-4 w-screen overflow-x-hidden overflow-y-scroll">
@@ -104,19 +107,19 @@ const WorkUpdates = () => {
           <div className="w-full flex flex-col mb-4" key={item?.id}>
             <div className="w-full flex gap-3 items-center">
               <div>
-              <img
-              src={item?.image_url}
-              alt="User"
-              className="w-7 h-7 rounded-full object-cover"
-            />
+                <img
+                  src={item?.image_url}
+                  alt="User"
+                  className="w-7 h-7 rounded-full object-cover"
+                />
               </div>
               <div className="flex-col text-sm">
-              <h1>{item?.created_at ? formatDate (item.created_at) : "N/A"}</h1>
+                <h1>{item?.created_at ? formatDate(item.created_at) : "N/A"}</h1>
 
                 <h2 className="text-zinc-500 w-[85%] truncate mt-0.5 text-xs">
-                {item?.remarks}
+                  {item?.remarks}
                 </h2>
-              </div>  
+              </div>
             </div>
             {index < workUpdatesData.length - 1 && (
               <div className="border-b w-full border-gray-500 my-3"></div>
@@ -135,7 +138,7 @@ const WorkUpdates = () => {
                 className="w-full h-48 object-cover mb-4 rounded-md"
               />
             )}
-            <Textarea 
+            <Textarea
               placeholder="Remarks"
               className="w-full p-3 border border-gray-300 rounded-md resize-none focus:outline-none focus:ring focus:ring-blue-400"
               rows={4}
@@ -144,7 +147,7 @@ const WorkUpdates = () => {
             />
           </div>
           <div className="flex justify-end">
-            <Button type="submit"  onClick={handleSubmit} className="w-full p-3">
+            <Button type="submit" onClick={handleSubmit} className="w-full p-3">
               Submit
             </Button>
           </div>

@@ -34,6 +34,6 @@ export const attendanceApi = baseApi.enhanceEndpoints({
 });
 
 export const {
-  useGetWorkUpdatesQuery,
+  useLazyGetWorkUpdatesQuery,
   useCreateWorkUpdateMutation, // Export the new mutation
 } = attendanceApi;
