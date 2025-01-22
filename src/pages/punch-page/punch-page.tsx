@@ -3,10 +3,10 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useHowinMaps } from "@/modules/howin-maps";
-import { requestLocationPermission } from "@/utils/location-permission-utils";
 import { usePunchInMutation, usePunchOutMutation } from "@/store/api/staffAttendanceApi";
 import { useLazyGetUserDataQuery } from "@/store/api/authApi";
 import { successToast } from "@/utils/common-utils";
+import { requestLocationPermission } from "@/utils/location-permission-utils";
 
 
 
@@ -42,7 +42,6 @@ const PunchPage = () => {
     const message = JSON.parse(event.data);
     if (message.type === "LOCATION_UPDATED") {
       const location = message.payload;
-      // alert(`Location !!!!: ${location?.latitude}, ${location?.longitude}`);
       setPosition({ lat: location?.latitude, lng: location?.longitude });
     }
   };
@@ -83,29 +82,29 @@ const PunchPage = () => {
   };
 
 
-
-  useEffect(() => {
-    const handleCurrentLocation = () => {
-      if (window.ReactNativeWebView) {
-        requestLocationPermission();
-      }
-      else {
-        if (navigator.geolocation) {
-          setIsLocLoading(true);
-          navigator.geolocation.getCurrentPosition((position) => {
-            const { latitude, longitude } = position.coords;
-            setPosition({ lat: latitude, lng: longitude });
-            setIsLocLoading(false);
-          });
-        }
-      }
-
+  const handleCurrentLocation = () => {
+    setIsLocLoading(true);
+    if (window.ReactNativeWebView) {
+      requestLocationPermission();
     }
-    handleCurrentLocation();
+    if (navigator.geolocation) {
+      setIsLocLoading(true);
+      navigator.geolocation.getCurrentPosition((position) => {
+        const { latitude, longitude } = position.coords;
+        setPosition({ lat: latitude, lng: longitude });
+        setIsLocLoading(false);
+      });
+      setIsLocLoading(false);
+    }
 
+
+  }
+  useEffect(() => {
+    handleCurrentLocation();
   }, []);
 
   const handleGeo = () => {
+
     if (position) {
       geocodeLatLng(position) // Only call if position is not null
         .then((results) => {
@@ -160,7 +159,6 @@ const PunchPage = () => {
           <MapPinned className="h-4 w-4 dark:text-white text-black " />
           {isLocLoading ? <div className="flex justify-center items-center"> <Loader2 className="animate-spin text-white" />  </div> : <h1 className={`w-[70vw] truncate text-white `}>
             {formattedAddress}
-
           </h1>}
           <RefreshCcw
             className={`h-4 w-4 text-white ${refetch ? "animate-spin duration-1000" : ""
@@ -168,6 +166,7 @@ const PunchPage = () => {
             onClick={() => {
               setRefetch(true);
               setTimeout(() => setRefetch(false), 1000);
+              handleCurrentLocation();
               handleGeo();
             }}
           />

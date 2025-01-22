@@ -1,9 +1,13 @@
 import { Outlet } from "react-router-dom"
+import { Toaster } from "./components/ui/toaster"
+
 
 const AppProviders = () => {
   // useGetUserDataQuery("")
   return (
-    <><Outlet/></>
+    <>
+      <Toaster />
+      <Outlet /></>
   )
 }
 

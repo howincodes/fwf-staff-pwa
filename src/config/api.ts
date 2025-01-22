@@ -1,14 +1,11 @@
 import axios from "axios";
 // export const isLocal = import.meta.env.VITE_IS_LOCAL == "true" ? true : false;
-const isLocal = false
+const isLocal = true
 
 
 export const WEBSITE_API_URL = isLocal ? 'http://fwf_fasna.test/api/staff' : 'https://fitwithfazna.howincloud.com/api/staff'
-export const ONDC_BASE_URL = "https://ondc.eatiko.com/api";
 
-export const MEDIA_URL = isLocal
-  ? "https://eatkoimages.b-cdn.net"
-  : "https://eatkoimages.b-cdn.net";
+
 
 const apiClient = axios.create({
   baseURL: WEBSITE_API_URL,

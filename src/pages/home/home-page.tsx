@@ -3,7 +3,6 @@ import ModeToggle from "@/components/mode-toggle";
 import { Card } from "@/components/ui/card";
 import {
   Briefcase,
-  ChevronDown,
   ChevronLeft,
   ChevronRight,
   Coffee,
@@ -147,7 +146,7 @@ const HomePage = () => {
 
       <div className="flex flex-col items-center justify-center p-4 mt-5 mb-8 bg-white dark:bg-zinc-800">
         <Briefcase className="w-6 h-6 text-[#FED272]" />
-        <div className="text-lg mt-2">Manage Leaves</div>
+        <div className="text-lg mt-2" onClick={() => navigate("/manage-leave")}>Manage Leaves</div>
       </div>
 
       <div className="space-y-6 py-6 px-3 dark:bg-zinc-800 bg-white h-full overflow-y-scroll">
